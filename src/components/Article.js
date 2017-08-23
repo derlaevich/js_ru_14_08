@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import CommentList from './CommentList'
 import PropTypes from 'prop-types'
 import toggleOpen from '../decorators/toggleOpen'
@@ -13,12 +13,12 @@ class Article extends Component {
     }
 
     render() {
-        const {article, toggleOpen} = this.props
+        const { article, toggleOpen } = this.props
         console.log('---', toggleOpen)
 
         return (
             <div>
-                <h3 onClick = {() => toggleOpen(article.id)}>{article.title}</h3>
+                <h3 onClick={() => toggleOpen(article.id)}>{article.title}</h3>
                 {this.getBody()}
             </div>
         )
@@ -28,7 +28,7 @@ class Article extends Component {
         return this.props.isOpen(this.props.article.id) && (
             <div>
                 <p>{this.props.article.text}</p>
-                <CommentList comments = {this.props.article.comments}/>
+                <CommentList comments={this.props.article.comments} />
             </div>
         )
     }

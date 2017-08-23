@@ -1,8 +1,18 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import Comment from './Comment'
 import toggleOpen from '../decorators/toggleOpen'
+import PropTypes from 'prop-types'
 
 class CommentList extends Component {
+    static propTypes = {
+        comments: PropTypes.arrayOf(PropTypes.shape({
+            id: PropTypes.string,
+            user: PropTypes.string,
+            text: PropTypes.string
+        })
+        )
+    };
+
     static defaultProps = {
         comments: []
     }
@@ -29,7 +39,7 @@ class CommentList extends Component {
 
 
     render() {
-        const {isOpen, toggleOpen} = this.props
+        const { isOpen, toggleOpen } = this.props
         const text = isOpen ? 'hide comments' : 'show comments'
         return (
             <div>
@@ -45,7 +55,7 @@ class CommentList extends Component {
 
         return comments.length ? (
             <ul>
-                {comments.map(comment => <li key = {comment.id}><Comment comment = {comment} /></li>)}
+                {comments.map(comment => <li key={comment.id}><Comment comment={comment} /></li>)}
             </ul>
         ) : <h3>No comments yet</h3>
     }
