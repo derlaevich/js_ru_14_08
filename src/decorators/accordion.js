@@ -7,13 +7,11 @@ export default (OriginalComponent) => class WrappedComponent extends React.Compo
     }
 
     isOpenItem = (openItemId) => {
-        console.log(this.state.openItemId == openItemId);
         return this.state.openItemId == openItemId;
     }
 
     toggleOpenItem = (openItemId) => {
-        console.log(openItemId);
-        this.setState({ openItemId });
+        this.setState({ openItemId: this.state.openItemId != openItemId ? openItemId : null });
     }
 
     render() {
