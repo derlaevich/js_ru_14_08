@@ -7,7 +7,7 @@ class CommentList extends Component {
         comments: []
     }
 
-    componentWillMount() {
+    /*componentWillMount() {
         console.log('---', 'mounting comment list')
     }
 
@@ -25,7 +25,7 @@ class CommentList extends Component {
 
     componentWillUnmount() {
         console.log('---', 'unmounting')
-    }
+    }*/
 
 
     render() {

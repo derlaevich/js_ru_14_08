@@ -18,14 +18,14 @@ class Article extends Component {
 
         return (
             <div>
-                <h3 onClick = {toggleOpen}>{article.title}</h3>
+                <h3 onClick = {() => toggleOpen(article.id)}>{article.title}</h3>
                 {this.getBody()}
             </div>
         )
     }
 
     getBody() {
-        return this.props.isOpen && (
+        return this.props.isOpen(this.props.article.id) && (
             <div>
                 <p>{this.props.article.text}</p>
                 <CommentList comments = {this.props.article.comments}/>
