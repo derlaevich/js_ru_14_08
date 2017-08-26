@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import Article from './Article'
 import accordion from '../decorators/accordion'
 import PropTypes from 'prop-types'
@@ -12,7 +12,7 @@ class ArticleList extends Component {
     }
 
     render() {
-        const {openItemId, toggleOpenItem, articles} = this.props
+        const { openItemId, toggleOpenItem, articles } = this.props
         const articleElements = articles.map(article => (
             <li key={article.id}>
                 <Article
