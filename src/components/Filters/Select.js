@@ -1,5 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import Select from 'react-select'
+import { setIdsFilterArticleList } from '../../AC/index'
+import { connect } from 'react-redux'
 
 import 'react-select/dist/react-select.css'
 
@@ -8,14 +10,18 @@ class SelectFilter extends Component {
         articles: PropTypes.array.isRequired
     };
 
-    state = {
-        selected: null
+    constructor(props) {
+        super(props);
     }
 
-    handleSelectionChange = selected => this.setState({ selected })
+    handleSelectionChange = selected => {
+        this.props.setIdsFilterArticleList(selected.map(function (item) {
+            return item.value;
+        }));
+    }
 
     render() {
-        const { articles } = this.props
+        const { articles, selectedIds } = this.props
         const options = articles.map(article => ({
             label: article.title,
             value: article.id
@@ -23,11 +29,16 @@ class SelectFilter extends Component {
 
         return <Select
             options={options}
-            value={this.state.selected}
+            value={selectedIds}
             onChange={this.handleSelectionChange}
             multi
         />
     }
 }
 
-export default SelectFilter
+function mapStateToProps(state) {
+    return {
+        selectedIds: state.filter.ids
+    }
+}
+export default connect(mapStateToProps, { setIdsFilterArticleList })(SelectFilter)

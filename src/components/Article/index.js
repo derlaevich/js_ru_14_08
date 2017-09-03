@@ -2,7 +2,6 @@ import React, {Component, PureComponent} from 'react'
 import CommentList from '../CommentList'
 import PropTypes from 'prop-types'
 import {findDOMNode} from 'react-dom'
-import CSSTransion from 'react-addons-css-transition-group'
 import './style.css'
 import {connect} from 'react-redux'
 import {deleteArticle} from '../../AC'
@@ -31,16 +30,7 @@ class Article extends PureComponent {
             <div ref={this.setContainerRef}>
                 <h3 onClick = {toggleOpen}>{article.title}</h3>
                 <button onClick={this.handleDelete}>delete me</button>
-                <CSSTransion
-                    transitionName="article"
-                    transitionEnterTimeout={500}
-                    transitionLeaveTimeout={300}
-                    transitionAppearTimeout={500}
-                    transitionAppear
-                    component="section"
-                >
                     {this.getBody()}
-                </CSSTransion>
             </div>
         )
     }
