@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import Comment from './Comment'
 import toggleOpen from '../decorators/toggleOpen'
 import CommentForm from './CommentForm'
@@ -24,7 +24,7 @@ class CommentList extends Component {
     }
 
     render() {
-        const {isOpen, toggleOpen} = this.props
+        const { isOpen, toggleOpen } = this.props
         const text = isOpen ? 'hide comments' : 'show comments'
         return (
             <div>
@@ -40,14 +40,15 @@ class CommentList extends Component {
 
         const body = comments.length ? (
             <ul>
-                {comments.map(id => <li key = {id}><Comment id = {id} /></li>)}
+                {comments.map(id => <li key={id}><Comment id={id} /></li>)}
             </ul>
         ) : <h3>No comments yet</h3>
 
+        const { articleId } = this.props;
         return (
             <div>
                 {body}
-                <CommentForm />
+                <CommentForm articleId={articleId} />
             </div>
         )
     }

@@ -1,13 +1,13 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import Article from './Article'
 import accordion from '../decorators/accordion'
 import PropTypes from 'prop-types'
-import {connect} from 'react-redux'
-import {filtratedArticlesSelector} from '../selectors'
+import { connect } from 'react-redux'
+import { filtratedArticlesSelector } from '../selectors'
 
 class ArticleList extends Component {
     static propTypes = {
-        articles: PropTypes.array.isRequired,
+        articles: PropTypes.object.isRequired,
         //from accordion decorator
         openItemId: PropTypes.string,
         toggleOpenItem: PropTypes.func.isRequired
@@ -15,16 +15,18 @@ class ArticleList extends Component {
 
     render() {
         console.log('---', 'rendering article list')
-        const {openItemId, toggleOpenItem, articles} = this.props
-        const articleElements = articles.map(article => (
-            <li key={article.id}>
-                <Article
-                    article={article}
-                    isOpen={article.id === openItemId}
-                    toggleOpen={toggleOpenItem(article.id)}
-                />
-            </li>
-        ))
+        const { openItemId, toggleOpenItem, articles } = this.props
+        const articleElements = Object.keys(articles).map((id) => {
+            return (
+                <li key={id}>
+                    <Article
+                        id={id}
+                        isOpen={id === openItemId}
+                        toggleOpen={toggleOpenItem(id)}
+                    />
+                </li>
+            )
+        });
 
         return (
             <ul>

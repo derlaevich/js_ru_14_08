@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import './style.css'
+import { addComment } from '../../AC/index'
+import { connect } from 'react-redux'
 
 class CommentForm extends Component {
     static propTypes = {
@@ -13,20 +15,23 @@ class CommentForm extends Component {
 
     render() {
         return (
-            <form onSubmit = {this.handleSubmit}>
-                user: <input value = {this.state.user}
-                             onChange = {this.handleChange('user')}
-                             className = {this.getClassName('user')} />
-                comment: <input value = {this.state.text}
-                                onChange = {this.handleChange('text')}
-                                className = {this.getClassName('text')} />
-                <input type = "submit" value = "submit"/>
+            <form onSubmit={this.handleSubmit}>
+                user: <input value={this.state.user}
+                    onChange={this.handleChange('user')}
+                    className={this.getClassName('user')} />
+                comment: <input value={this.state.text}
+                    onChange={this.handleChange('text')}
+                    className={this.getClassName('text')} />
+                <input type="submit" value="submit" />
             </form>
         )
     }
 
     handleSubmit = ev => {
         ev.preventDefault()
+        const { articleId, addComment } = this.props;
+        const { user, text } = this.state;
+        addComment(articleId, user, text);
         this.setState({
             user: '',
             text: ''
@@ -37,7 +42,7 @@ class CommentForm extends Component {
         ? 'form-input__error' : ''
 
     handleChange = type => ev => {
-        const {value} = ev.target
+        const { value } = ev.target
         if (value.length > limits[type].max) return
         this.setState({
             [type]: value
@@ -56,4 +61,5 @@ const limits = {
     }
 }
 
-export default CommentForm
+//export default 
+export default connect(null, { addComment })(CommentForm)

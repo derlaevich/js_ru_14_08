@@ -1,11 +1,12 @@
-import React, {Component, PureComponent} from 'react'
+import React, { Component, PureComponent } from 'react'
 import CommentList from '../CommentList'
 import PropTypes from 'prop-types'
-import {findDOMNode} from 'react-dom'
-import CSSTransion from 'react-addons-css-transition-group'
+import { findDOMNode } from 'react-dom'
+//import CSSTransion from 'react-addons-css-transition-group'
 import './style.css'
-import {connect} from 'react-redux'
-import {deleteArticle} from '../../AC'
+import { connect } from 'react-redux'
+import { deleteArticle } from '../../AC'
+import { createArticleSelector } from '../../selectors'
 
 class Article extends PureComponent {
     static propTypes = {
@@ -18,29 +19,20 @@ class Article extends PureComponent {
         toggleOpen: PropTypes.func
     }
 
-/*
-    shouldComponentUpdate(nextProps, nextState) {
-        return this.props.isOpen !== nextProps.isOpen
-    }
-*/
+    /*
+        shouldComponentUpdate(nextProps, nextState) {
+            return this.props.isOpen !== nextProps.isOpen
+        }
+    */
 
     render() {
-        const {article, toggleOpen, deleteArticle} = this.props
+        const { article, toggleOpen, deleteArticle } = this.props
 
         return (
             <div ref={this.setContainerRef}>
-                <h3 onClick = {toggleOpen}>{article.title}</h3>
+                <h3 onClick={toggleOpen}>{article.title}</h3>
                 <button onClick={deleteArticle}>delete me</button>
-                <CSSTransion
-                    transitionName="article"
-                    transitionEnterTimeout={500}
-                    transitionLeaveTimeout={300}
-                    transitionAppearTimeout={500}
-                    transitionAppear
-                    component="section"
-                >
-                    {this.getBody()}
-                </CSSTransion>
+                {this.getBody()}
             </div>
         )
     }
@@ -53,19 +45,20 @@ class Article extends PureComponent {
     componentDidUpdate() {
         console.log('---', this.container.getBoundingClientRect())
     }
-/*
-
-    deleteComment = () => {
-        this.props.article.comments.splice(0,1)
-        this.setState({})
-    }
-*/
+    /*
+    
+        deleteComment = () => {
+            this.props.article.comments.splice(0,1)
+            this.setState({})
+        }
+    */
 
     getBody() {
-        return this.props.isOpen && (
+        const { article, isOpen } = this.props;
+        return isOpen && (
             <div>
-                <p>{this.props.article.text}</p>
-                <CommentList comments = {this.props.article.comments} ref = {this.setCommentsRef} />
+                <p>{article.text}</p>
+                <CommentList comments={article.comments} articleId={article.id} ref={this.setCommentsRef} />
             </div>
         )
     }
@@ -73,26 +66,36 @@ class Article extends PureComponent {
     setCommentsRef = (commentsRef) => {
         this.commentsRef = commentsRef
         console.log('---', findDOMNode(commentsRef))
-//        commentsRef.forceUpdate()
-/*
-        setTimeout(() => {
-            commentsRef.setState({
-                isOpen: true
-            })
-        }, 500)
-*/
+        //        commentsRef.forceUpdate()
+        /*
+                setTimeout(() => {
+                    commentsRef.setState({
+                        isOpen: true
+                    })
+                }, 500)
+        */
     }
 
-/*
-    handleDelete = () => {
-        const {deleteArticle, article} = this.props
-        deleteArticle(article.id)
-    }
-*/
+    /*
+        handleDelete = () => {
+            const {deleteArticle, article} = this.props
+            deleteArticle(article.id)
+        }
+    */
 }
 
-export default connect(null, (dispatch, ownProps) => ({
-    deleteArticle: () => dispatch(deleteArticle(ownProps.article.id))
-}))(Article)
+const createMapStateToProps = () => {
+    const articleSelector = createArticleSelector()
+
+    return (state, ownProps) => ({
+        article: articleSelector(state, ownProps)
+    })
+}
+
+export default connect(createMapStateToProps)(Article);
+
+// export default connect(null, (dispatch, ownProps) => ({
+//     deleteArticle: () => dispatch(deleteArticle(ownProps.article.id))
+// }))(Article)
 
 //export default connect(null, { deleteArticle })(Article)
