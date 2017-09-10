@@ -1,8 +1,11 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import Comment from './Comment'
 import toggleOpen from '../decorators/toggleOpen'
 import CommentForm from './CommentForm'
 import PropTypes from 'prop-types'
+import { loadCommentsByArticleId } from '../AC'
+import { connect } from 'react-redux'
+import Loader from './Loader'
 
 class CommentList extends Component {
     static defaultProps = {
@@ -11,20 +14,24 @@ class CommentList extends Component {
         toggleOpen: PropTypes.func
     }
 
-    componentDidMount() {
-        console.log('---', 'mounted')
+    componentWillReceiveProps(nextProps) {
+        if (!this.props.isLoaded && nextProps.isOpen && !this.props.isOpen) {
+            const { article, loadComments } = nextProps;
+            loadComments();
+        }
     }
 
-    componentWillUnmount() {
-        console.log('---', 'unmounting')
-    }
+    // shouldComponentUpdate(nextProps, nextState) {
+    //     return !nextState.commentCount && !this.props.loading;
+    //   }
 
-    componentDidUpdate() {
-        console.log('---', 'updated')
-    }
+    // componentDidMount() {
+    //     var { article, loadComments } = this.props;
+    //     loadComments();
+    // }
 
     render() {
-        const {isOpen, toggleOpen} = this.props
+        const { isOpen, toggleOpen } = this.props
         const text = isOpen ? 'hide comments' : 'show comments'
         return (
             <div>
@@ -35,23 +42,33 @@ class CommentList extends Component {
     }
 
     getBody() {
-        const { article: {id, comments = []}, isOpen } = this.props
+        const { article: { id, comments = [] }, isOpen, loading, isLoaded } = this.props
         if (!isOpen) return null
-
+        if (loading) return <Loader />
+        if (!isLoaded) return null
+            
         const body = comments.length ? (
             <ul>
-                {comments.map(id => <li key = {id}><Comment id = {id} /></li>)}
+                {comments.map(id => <li key={id}><Comment id={id} /></li>)}
             </ul>
         ) : <h3>No comments yet</h3>
 
         return (
             <div>
                 {body}
-                <CommentForm articleId = {id} />
+                <CommentForm articleId={id} />
             </div>
         )
     }
 }
 
+export default connect((state, ownProps) => {
+    return {
+        loading: state.comments.loading,
+        isLoaded: state.comments.loaded[ownProps.article.id]
+    }
+}, (dispatch, ownProps) => ({
+    loadComments: () => dispatch(loadCommentsByArticleId(ownProps.article.id))
+}))(toggleOpen(CommentList))
 
-export default toggleOpen(CommentList)
+//export default toggleOpen(CommentList)

@@ -1,5 +1,7 @@
 import {
-    INCREMENT, DELETE_ARTICLE, CHANGE_DATE_RANGE, CHANGE_SELECTION, ADD_COMMENT, LOAD_ALL_ARTICLES, LOAD_ARTICLE,
+    INCREMENT, DELETE_ARTICLE, CHANGE_DATE_RANGE, CHANGE_SELECTION, 
+    ADD_COMMENT, LOAD_ARTICLE_COMMENTS,
+    LOAD_ALL_ARTICLES, LOAD_ARTICLE,
     START, SUCCESS, FAIL
 } from '../constants'
 
@@ -35,6 +37,30 @@ export function addComment(comment, articleId) {
         type: ADD_COMMENT,
         payload: { comment, articleId },
         generateId: true
+    }
+}
+
+export function loadCommentsByArticleId(id){
+    return (dispatch) => {
+        dispatch({
+            type: LOAD_ARTICLE_COMMENTS + START,
+            payload: { id }
+        })
+
+        setTimeout(() => {
+            fetch(`/api/comment?acticle=${id}`)
+                .then(res => res.json())
+                .then(response => dispatch({
+                    type: LOAD_ARTICLE_COMMENTS + SUCCESS,
+                    payload: { id },
+                    response
+                }))
+                .catch(error => dispatch({
+                    type: LOAD_ARTICLE_COMMENTS + FAIL,
+                    payload: { id },
+                    error
+                }))
+        }, 1000)
     }
 }
 
